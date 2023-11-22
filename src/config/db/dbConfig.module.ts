@@ -3,7 +3,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { DBConfigService } from './dbConfig.service';
 import BaseConfiguration from '../config';
 import DatabaseConfiguration from './config';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 /**
  * Multiple Database connections and services indexing module.
  *
@@ -16,7 +16,7 @@ import { ConfigModule } from '@nestjs/config';
       load: [DatabaseConfiguration],
     }),
   ],
-  providers: [DBConfigService, PrismaService],
-  exports: [DBConfigService, PrismaService],
+  providers: [ConfigService, DBConfigService, PrismaService],
+  exports: [ConfigService, DBConfigService, PrismaService],
 })
 export class DatabaseModule {}

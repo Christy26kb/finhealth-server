@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import BaseConfiguration from '../config';
 import AppConfiguration from './config';
 import { AppConfigService } from './appConfig.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 /**
  * Import and provide app configuration related classes.
  *
@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       load: [AppConfiguration],
     }),
   ],
-  providers: [AppConfigService],
-  exports: [AppConfigService],
+  providers: [ConfigService, AppConfigService],
+  exports: [ConfigService, AppConfigService],
 })
 export class AppConfigModule {}

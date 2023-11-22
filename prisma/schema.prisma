@@ -4,5 +4,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("SUPABSE_DATABASE_URL")
+  url = env("SUPABASE_DB_URL")
+  shadowDatabaseUrl = env("SUPABASE_SHADOW_DB_URL")
+}
+
+// Database Schema
+model users {
+  id    String  @id @db.Uuid
+  email String
+  name  String
 }
