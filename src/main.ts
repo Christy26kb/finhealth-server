@@ -7,7 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
   });
-  const appConfig: AppConfigService = app.get('AppConfigService');
+
+  const appConfig: AppConfigService = app.get(AppConfigService, {
+    strict: false,
+  });
 
   // Swagger
   const options = new DocumentBuilder()

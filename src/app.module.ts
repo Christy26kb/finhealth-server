@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
-import { BaseConfigModule } from './config/config.module';
+import { AppConfigModule } from './config/app/appConfig.module';
+
+import { AppConfigService } from './config/app/appConfig.service';
+import { DatabaseConfigModule } from './config/db/dbConfig.module';
 /**
  * App Module
  *
@@ -11,8 +14,10 @@ import { BaseConfigModule } from './config/config.module';
     DevtoolsModule.register({
       http: process.env.NODE_ENV !== 'production',
     }),
-    BaseConfigModule,
+    AppConfigModule,
+    DatabaseConfigModule,
   ],
-  exports: [BaseConfigModule],
+  providers: [AppConfigService],
+  exports: [AppConfigService],
 })
 export class AppModule {}

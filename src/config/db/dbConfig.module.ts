@@ -17,6 +17,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   providers: [ConfigService, DBConfigService, PrismaService],
-  exports: [ConfigService, DBConfigService, PrismaService],
+  exports: [DBConfigService, PrismaService],
 })
-export class DatabaseModule {}
+export class DatabaseConfigModule {}

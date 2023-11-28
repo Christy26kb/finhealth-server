@@ -8,14 +8,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
  *
  * @module
  */
+
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: BaseConfiguration.envFilePath,
       load: [AppConfiguration],
     }),
   ],
   providers: [ConfigService, AppConfigService],
-  exports: [ConfigService, AppConfigService],
 })
 export class AppConfigModule {}
