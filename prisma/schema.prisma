@@ -2,6 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator fieldEncryptionMigrations {
+  provider = "prisma-field-encryption"
+  output   = "./migrations"
+}
+
 datasource db {
   provider = "postgresql"
   url = env("SUPABASE_DB_URL")
@@ -10,7 +15,207 @@ datasource db {
 
 // Database Schema
 model users {
-  id    String  @id @db.Uuid
-  email String
-  name  String
+  id                         String          @id @db.Uuid
+  email                      String
+  name                       String
+  phone                      String?
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  profiles                   profiles[]
+}
+
+model profiles {
+  id                         String         @id @db.Uuid
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  currency                   String          @default("INR")
+  locale                     String          @default("en")
+  monthly_email_report       Boolean         @default(false)
+  user_id                    String          @db.Uuid
+  user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  sessions                   sessions[]
+}
+
+model sessions {
+  id                         String          @id @db.Uuid
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  start_date                 DateTime        @default(now()) @db.Timestamptz(6)
+  end_date                   DateTime
+  profile_id                 String          @db.Uuid
+  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  expenses                   expenses[]
+  incomes                    incomes[]
+  investments                investments[]
+  subscriptions              subscriptions[]
+  transactions               transactions[]
+  reports                    reports[]
+}
+
+model categories {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+}
+
+model incomes {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  /// @encrypted
+  amount                     String          @default("0")
+  isLend                     Boolean?        @default(false)
+  session_id                 String          @db.Uuid
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}
+
+model expenses {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name         String
+  /// @encrypted
+  notes        String?
+  nameHash                   String?
+  /// @encrypted
+  amount                     String          @default("0")
+  isDebt                     Boolean?        @default(false)
+  session_id                 String          @db.Uuid
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}
+
+model lends {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  /// @encrypted
+  amount                     String          @default("0")
+  profile_id                 String          @db.Uuid
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  completed                  Boolean         @default(false)
+  notify                     Boolean         @default(false)
+  notifier_id                String?         @db.Uuid
+}
+
+model debts {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  /// @encrypted
+  amount                     String          @default("0")
+  profile_id                 String          @db.Uuid
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  completed                  Boolean         @default(false)
+  notify                     Boolean         @default(false)
+  notifier_id                String?         @db.Uuid
+}
+
+model subscriptions {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  /// @encrypted
+  amount                     String          @default("0")
+  notify                     Boolean         @default(false)
+  notify_date                DateTime
+  notifier_id                String?         @db.Uuid
+  session_id                 String          @db.Uuid
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}
+
+model investments {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  /// @encrypted
+  amount                     String          @default("0")
+  /// @encrypted
+  units                      String          @default("0")
+  session_id                 String          @db.Uuid
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}
+
+// Advanced Feature - Transactions (Account Aggregators Related Entities)
+model transactions {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  /// @encrypted
+  amount                     String          @default("0")
+  nameHash                   String?
+  session_id                 String          @db.Uuid
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+}
+
+model notifiers {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  notify_date                DateTime
+  enabled                    Boolean         @default(false)
+  completed                  Boolean         @default(false)
+  repeat                     Boolean?        @default(false)
+}
+
+model reports {
+  id                         String          @id @default(uuid())
+  /// @encrypted
+  name                       String
+  /// @encrypted
+  notes                      String?
+  nameHash                   String?
+  session_id                 String          @db.Uuid
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+}
+
+model feedbacks {
+  id                         String          @id @default(uuid())
+  message                    String
+  user_id                    String          @db.Uuid
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+}
+
+model contact {
+  id                         Int             @id @default(autoincrement())
+  message                    String
+  subject                    String
+  email                      String
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
 }
