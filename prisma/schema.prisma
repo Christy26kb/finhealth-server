@@ -24,6 +24,7 @@ enum Category {
   INCOME
   EXPENSE
   INVESTMENT
+  SUBSCRIPTION
 }
 
 model users {
@@ -44,10 +45,12 @@ model profiles {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   currency                   String          @default("INR")
   locale                     String          @default("en")
   monthly_email_report       Boolean         @default(false)
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   user_id                    String          @db.Uuid
   user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   sessions                   sessions[]
@@ -63,11 +66,12 @@ model sessions {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   start_date                 DateTime        @default(now()) @db.Timestamptz(6)
   end_date                   DateTime
+  is_active                  Boolean
   profile_id                 String          @db.Uuid
   profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   expenses                   expenses[]
@@ -84,7 +88,9 @@ model categories {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   profile_id                 String          @db.Uuid
   profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   type                       Category?
@@ -100,12 +106,14 @@ model incomes {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   /// @encrypted
   amount                     String          @default("0")
   isLend                     Boolean?        @default(false)
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   session_id                 String          @db.Uuid
-  session                    sessions        @relation(fields: [session_id], references: [id])
+  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
   category_id                String          @db.Uuid
   category                   categories      @relation(fields: [category_id], references: [id])
 }
@@ -116,10 +124,12 @@ model expenses {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   /// @encrypted
   amount                     String          @default("0")
   isDebt                     Boolean?        @default(false)
+  created_at                 DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   session_id                 String          @db.Uuid
   session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
   category_id                String          @db.Uuid
@@ -132,7 +142,7 @@ model lends {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   /// @encrypted
   amount                     String          @default("0")
   profile_id                 String          @db.Uuid
@@ -150,7 +160,7 @@ model debts {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   /// @encrypted
   amount                     String          @default("0")
   profile_id                 String          @db.Uuid
@@ -168,7 +178,7 @@ model subscriptions {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   /// @encrypted
   amount                     String          @default("0")
   notify                     Boolean         @default(false)
@@ -186,7 +196,7 @@ model investments {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   /// @encrypted
   amount                     String          @default("0")
   /// @encrypted
@@ -206,7 +216,7 @@ model transactions {
   notes                      String?
   /// @encrypted
   amount                     String          @default("0")
-  nameHash                   String?
+  name_hash                   String?
   session_id                 String          @db.Uuid
   session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
 }
@@ -217,7 +227,7 @@ model notifiers {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   notify_date                DateTime
@@ -234,7 +244,7 @@ model reports {
   name                       String
   /// @encrypted
   notes                      String?
-  nameHash                   String?
+  name_hash                   String?
   session_id                 String          @db.Uuid
   session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
