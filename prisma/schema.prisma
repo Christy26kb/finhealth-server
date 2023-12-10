@@ -14,14 +14,28 @@ datasource db {
 }
 
 // Database Schema
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Category {
+  INCOME
+  EXPENSE
+  INVESTMENT
+}
+
 model users {
   id                         String          @id @db.Uuid
-  email                      String
-  name                       String
-  phone                      String?
+  email                      String          @unique
+  name                       String?
+  phone                      String?         @unique
+  role                       Role            @default(USER)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   profiles                   profiles[]
+  feedbacks                  feedbacks[]
 }
 
 model profiles {
@@ -37,6 +51,10 @@ model profiles {
   user_id                    String          @db.Uuid
   user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   sessions                   sessions[]
+  lends                      lends[]
+  debts                      debts[]
+  categories                 categories[]
+  notifiers                  notifiers[]
 }
 
 model sessions {
@@ -61,12 +79,19 @@ model sessions {
 }
 
 model categories {
-  id                         String          @id @default(uuid())
+  id                         String          @id @db.Uuid
   /// @encrypted
   name                       String
   /// @encrypted
   notes                      String?
   nameHash                   String?
+  profile_id                 String          @db.Uuid
+  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  type                       Category?
+  incomes                    incomes[]
+  expenses                   expenses[]
+  investments                investments[]
+  subscriptions              subscriptions[]
 }
 
 model incomes {
@@ -80,21 +105,25 @@ model incomes {
   amount                     String          @default("0")
   isLend                     Boolean?        @default(false)
   session_id                 String          @db.Uuid
-  session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  session                    sessions        @relation(fields: [session_id], references: [id])
+  category_id                String          @db.Uuid
+  category                   categories      @relation(fields: [category_id], references: [id])
 }
 
 model expenses {
   id                         String          @id @default(uuid())
   /// @encrypted
-  name         String
+  name                       String
   /// @encrypted
-  notes        String?
+  notes                      String?
   nameHash                   String?
   /// @encrypted
   amount                     String          @default("0")
   isDebt                     Boolean?        @default(false)
   session_id                 String          @db.Uuid
   session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  category_id                String          @db.Uuid
+  category                   categories      @relation(fields: [category_id], references: [id])
 }
 
 model lends {
@@ -107,6 +136,7 @@ model lends {
   /// @encrypted
   amount                     String          @default("0")
   profile_id                 String          @db.Uuid
+  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   completed                  Boolean         @default(false)
@@ -124,6 +154,7 @@ model debts {
   /// @encrypted
   amount                     String          @default("0")
   profile_id                 String          @db.Uuid
+  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
   completed                  Boolean         @default(false)
@@ -145,6 +176,8 @@ model subscriptions {
   notifier_id                String?         @db.Uuid
   session_id                 String          @db.Uuid
   session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  category_id                String          @db.Uuid
+  category                   categories      @relation(fields: [category_id], references: [id])
 }
 
 model investments {
@@ -160,6 +193,8 @@ model investments {
   units                      String          @default("0")
   session_id                 String          @db.Uuid
   session                    sessions        @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  category_id                String          @db.Uuid
+  category                   categories      @relation(fields: [category_id], references: [id])
 }
 
 // Advanced Feature - Transactions (Account Aggregators Related Entities)
@@ -189,6 +224,8 @@ model notifiers {
   enabled                    Boolean         @default(false)
   completed                  Boolean         @default(false)
   repeat                     Boolean?        @default(false)
+  profile_id                 String          @db.Uuid
+  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
 }
 
 model reports {
@@ -207,9 +244,10 @@ model reports {
 model feedbacks {
   id                         String          @id @default(uuid())
   message                    String
-  user_id                    String          @db.Uuid
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  user_id                    String          @db.Uuid
+  user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model contact {
