@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import BaseConfiguration from '../config';
-import AppConfiguration from './config';
-import { AppConfigService } from './appConfig.service';
+import AuthConfiguration from './config';
+import { AuthConfigService } from './auth-config.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 /**
  * Import and provide app configuration related classes.
@@ -14,9 +14,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: BaseConfiguration.envFilePath,
-      load: [AppConfiguration],
+      load: [AuthConfiguration],
     }),
   ],
-  providers: [ConfigService, AppConfigService],
+  providers: [ConfigService, AuthConfigService],
 })
-export class AppConfigModule {}
+export class AuthConfigModule {}

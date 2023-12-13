@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
-import { DBConfigService } from './dbConfig.service';
+import { DBConfigService } from './db-config.service';
 import BaseConfiguration from '../config';
 import DatabaseConfiguration from './config';
 import { ConfigModule, ConfigService } from '@nestjs/config';

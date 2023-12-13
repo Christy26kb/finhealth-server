@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
-import { AppConfigModule } from './config/app/appConfig.module';
 
-import { AppConfigService } from './config/app/appConfig.service';
-import { DatabaseConfigModule } from './config/db/dbConfig.module';
+import { AppConfigModule } from './config/app/app-config.module';
+import { AppConfigService } from './config/app/app-config.service';
+import { DatabaseConfigModule } from './config/db/db-config.module';
+import { AuthConfigModule } from './config/auth/auth-config.module';
+
 /**
  * App Module
  *
@@ -16,6 +18,7 @@ import { DatabaseConfigModule } from './config/db/dbConfig.module';
     }),
     AppConfigModule,
     DatabaseConfigModule,
+    AuthConfigModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],

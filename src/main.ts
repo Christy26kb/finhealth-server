@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppConfigService } from './config/app/appConfig.service';
+import { AppConfigService } from './config/app/app-config.service';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
