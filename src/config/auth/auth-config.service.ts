@@ -20,4 +20,12 @@ export class AuthConfigService {
   get clientId(): string {
     return this.configService.get<string>('auth.cognito_client_id');
   }
+
+  get userPoolRegion(): string {
+    return this.configService.get<string>('auth.cognito_user_pool_region');
+  }
+
+  get cognitoAuthority(): string {
+    return this.configService.get<string>('auth.cognito_authority');
+  }
 }
