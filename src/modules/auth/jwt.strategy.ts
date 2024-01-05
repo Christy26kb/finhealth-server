@@ -6,30 +6,25 @@ import { AuthConfigService } from '../../config/auth/auth-config.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  private jwtOptions: any;
+  private secretOrKeyProvider: any;
 
   constructor(private authConfigService: AuthConfigService) {
-    const initialOptions = {
+    super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      // ... other options
-    };
+    });
 
-    super(initialOptions);
+    this.setupSecretOrKeyProvider();
+  }
 
-    // Perform additional setup after the super() call
-    this.jwtOptions = {
-      ...initialOptions,
-      _audience: this.authConfigService.clientId,
-      issuer: this.authConfigService.cognitoAuthority,
-      secretOrKeyProvider: passportJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri:
-          this.authConfigService.cognitoAuthority + '/.well-known/jwks.json',
-      }),
-    };
+  private setupSecretOrKeyProvider() {
+    this.secretOrKeyProvider = passportJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri:
+        this.authConfigService.cognitoAuthority + '/.well-known/jwks.json',
+    });
   }
 
   async validate(payload: any) {
