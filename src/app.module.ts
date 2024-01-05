@@ -5,6 +5,7 @@ import { AppConfigModule } from './config/app/app-config.module';
 import { AppConfigService } from './config/app/app-config.service';
 import { DatabaseConfigModule } from './config/db/db-config.module';
 import { AuthConfigModule } from './config/auth/auth-config.module';
+import { UsersModule } from './modules/users/users.module';
 
 /**
  * App Module
@@ -19,6 +20,7 @@ import { AuthConfigModule } from './config/auth/auth-config.module';
     AppConfigModule,
     DatabaseConfigModule,
     AuthConfigModule,
+    UsersModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],

@@ -2,10 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator fieldEncryptionMigrations {
-  provider = "prisma-field-encryption"
-  output   = "./migrations"
-}
+// generator fieldEncryptionMigrations {
+//   provider = "prisma-field-encryption"
+//   output   = "./migrations"
+// }
 
 datasource db {
   provider = "postgresql"
