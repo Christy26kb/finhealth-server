@@ -10,13 +10,13 @@ import {
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 
-@Controller('api/v1/users')
+@Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Put(':id')
   @UsePipes(ValidationPipe)
   async login(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.updateUser(updateUserDto);
+    return await this.usersService.updateUser(id, updateUserDto);
   }
 }

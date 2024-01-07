@@ -9,7 +9,7 @@ import { AwsCognitoService } from './aws-cognito.service';
 import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import { AuthRegisterUserDto } from './dtos/auth-register-user.dto';
 
-@Controller('api/v1/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private awsCognitoService: AwsCognitoService) {}
 
