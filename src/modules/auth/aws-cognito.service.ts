@@ -8,13 +8,16 @@ import {
 
 import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import { AuthRegisterUserDto } from './dtos/auth-register-user.dto';
+import { AuthVerifyUserDto } from './dtos/auth-verify-user.dto';
 import { AuthConfigService } from '../../config/auth/auth-config.service';
+import { PrismaService } from '../../config/db/prisma/prisma.service';
 
 @Injectable()
 export class AwsCognitoService {
   constructor(
     private userPool: CognitoUserPool,
     private authConfigService: AuthConfigService,
+    private prismaService: PrismaService,
   ) {
     this.userPool = new CognitoUserPool({
       UserPoolId: this.authConfigService.userPoolId,
@@ -22,7 +25,7 @@ export class AwsCognitoService {
     });
   }
 
-  async registerUser(authRegisterUserDto: AuthRegisterUserDto) {
+  async signupUser(authRegisterUserDto: AuthRegisterUserDto) {
     const { name, email, password } = authRegisterUserDto;
 
     return new Promise((resolve, reject) => {
@@ -36,18 +39,35 @@ export class AwsCognitoService {
           }),
         ],
         null,
-        (err, result) => {
+        async (err, result) => {
           if (!result) {
             reject(err);
           } else {
-            resolve({
-              id: result.userSub,
-              email,
-              name,
-            });
+            resolve(
+              await this.prismaService.users.create({
+                data: {
+                  id: result.userSub,
+                  email,
+                  name,
+                },
+              }),
+            );
           }
         },
       );
+    });
+  }
+
+  async verifyUser(authVerifyUserDto: AuthVerifyUserDto) {
+    return new Promise((resolve, reject) => {
+      const { email, code } = authVerifyUserDto;
+      return new CognitoUser({
+        Username: email,
+        Pool: this.userPool,
+      }).confirmRegistration(code, true, (err, result) => {
+        if (err) reject(err);
+        else resolve(result);
+      });
     });
   }
 

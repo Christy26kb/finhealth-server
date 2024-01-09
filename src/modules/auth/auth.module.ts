@@ -6,16 +6,20 @@ import { AwsCognitoService } from './aws-cognito.service';
 import { UsersModule } from '../users/users.module';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import { AuthConfigService } from '../../config/auth/auth-config.service';
+import { PrismaService } from '../../config/db/prisma/prisma.service';
+import { DatabaseConfigModule } from '../../config/db/db-config.module';
 @Module({
   imports: [
     AuthConfigModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
+    DatabaseConfigModule,
   ],
   controllers: [AuthController],
   providers: [
     AwsCognitoService,
     AuthConfigService,
+    PrismaService,
     {
       provide: CognitoUserPool,
       useFactory: (authConfigService: AuthConfigService) => {
