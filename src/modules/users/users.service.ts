@@ -14,7 +14,7 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto) {
     const { name, email, id } = createUserDto;
-    this.prismaService.users.create({
+    return await this.prismaService.users.create({
       data: {
         id,
         name,
@@ -24,15 +24,18 @@ export class UsersService {
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
-    const { name, email } = updateUserDto;
-    this.prismaService.users.update({
+    const { name } = updateUserDto;
+    return await this.prismaService.users.update({
       where: {
         id,
       },
       data: {
         name,
-        email,
       },
     });
+  }
+
+  async getAllUsers() {
+    return await this.prismaService.users.findMany();
   }
 }
