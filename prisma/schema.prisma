@@ -56,7 +56,6 @@ model users {
   premium_usage_limit_email  Boolean         @default(false)
   feedbacks                  feedbacks[]
   profiles                   profiles[]
-  notifiers                  notifiers[]
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -77,12 +76,10 @@ model notifiers {
   /// @encrypted
   notes                      String?
   name_hash                  String?
-  user_id                    String          @db.Uuid
-  user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   profile_id                 String          @db.Uuid
-  profiles                   profiles        @relation(fields: [profile_id], references: [id])
+  profiles                   profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   notify_date                DateTime
   enabled                    Boolean         @default(false)
   completed                  Boolean         @default(false)
@@ -130,7 +127,7 @@ model incomes {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -148,7 +145,7 @@ model expenses {
   name_hash                  String?
   paid_via                   String          @default("")
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -165,7 +162,7 @@ model debts {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -182,7 +179,7 @@ model lends {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -201,7 +198,7 @@ model investments {
   units                      String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -225,7 +222,7 @@ model subscriptions {
   active                     Boolean?        @default(true)
   cancelled_at               String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
 }
@@ -242,7 +239,7 @@ model reports {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id])
+  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   start_date                 DateTime
   end_date                   DateTime
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
