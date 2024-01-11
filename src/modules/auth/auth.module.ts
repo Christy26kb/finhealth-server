@@ -9,19 +9,21 @@ import { AuthConfigService } from '../../config/auth/auth-config.service';
 import { PrismaService } from '../../config/db/prisma/prisma.service';
 import { DatabaseConfigModule } from '../../config/db/db-config.module';
 import { JwtStrategy } from './jwt.strategy';
-import { JwtAuthGuard } from './auth.guard';
+import { JwtAuthGuard } from './guards/auth.guard';
+import { UsersService } from '../users/users.service';
 @Module({
   imports: [
     AuthConfigModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    UsersModule,
     DatabaseConfigModule,
+    UsersModule,
   ],
   controllers: [AuthController],
   providers: [
     AwsCognitoService,
     AuthConfigService,
     PrismaService,
+    UsersService,
     JwtStrategy,
     JwtAuthGuard,
     {

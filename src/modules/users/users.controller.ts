@@ -11,23 +11,30 @@ import {
 
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { JwtAuthGuard } from '../auth/auth.guard';
+import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  //TODO: Need to add a permissions guard for permissions validations
   @Get()
-  @UseGuards(JwtAuthGuard)
-  async getAllUsers() {
-    return await this.usersService.getAllUsers();
+  async findAllUsers() {
+    return await this.usersService.findAllUsers();
+  }
+
+  @Get(':id')
+  @UsePipes(ValidationPipe)
+  async findUser(@Param('id') id: string) {
+    return await this.usersService.findUser(id);
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationPipe)
-  async login(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return await this.usersService.updateUser(id, updateUserDto);
   }
 }

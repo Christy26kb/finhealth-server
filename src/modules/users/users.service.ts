@@ -35,7 +35,15 @@ export class UsersService {
     });
   }
 
-  async getAllUsers() {
+  async findAllUsers() {
     return await this.prismaService.users.findMany();
+  }
+
+  async findUser(id: string) {
+    return await this.prismaService.users.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 }
