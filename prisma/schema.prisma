@@ -41,7 +41,7 @@ model users {
   /// @encrypted
   notes                      String?
   name_hash                  String?
-  role                       Roles            @default(USER)
+  role                       Roles           @default(USER)
   order_identifier           String?
   order_store_id             String?
   order_number               String?
