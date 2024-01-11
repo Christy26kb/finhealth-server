@@ -8,6 +8,8 @@ import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import { AuthConfigService } from '../../config/auth/auth-config.service';
 import { PrismaService } from '../../config/db/prisma/prisma.service';
 import { DatabaseConfigModule } from '../../config/db/db-config.module';
+import { JwtStrategy } from './jwt.strategy';
+import { JwtAuthGuard } from './auth.guard';
 @Module({
   imports: [
     AuthConfigModule,
@@ -20,6 +22,8 @@ import { DatabaseConfigModule } from '../../config/db/db-config.module';
     AwsCognitoService,
     AuthConfigService,
     PrismaService,
+    JwtStrategy,
+    JwtAuthGuard,
     {
       provide: CognitoUserPool,
       useFactory: (authConfigService: AuthConfigService) => {
@@ -31,5 +35,6 @@ import { DatabaseConfigModule } from '../../config/db/db-config.module';
       inject: [AuthConfigService],
     },
   ],
+  exports: [JwtAuthGuard],
 })
 export class AuthModule {}
