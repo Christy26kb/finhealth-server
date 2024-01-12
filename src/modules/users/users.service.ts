@@ -44,6 +44,10 @@ export class UsersService {
       where: {
         id,
       },
+      include: {
+        profiles: true,
+        feedbacks: true,
+      },
     });
   }
 }

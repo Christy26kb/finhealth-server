@@ -1,5 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { RolePermissions } from '../constants/roles';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -9,20 +10,15 @@ export class PermissionsGuard implements CanActivate {
     const permissions = this.reflector.get('permissions', context.getHandler());
 
     if (!permissions) {
-      return true; // No permissions defined, allow access
+      return true;
     }
-
-    // Implement your logic to check user permissions based on the metadata
-
-    // For example, check if the user's role allows the specified actions
     const user = context.switchToHttp().getRequest().user;
-    if (user && permissions.role === user.role) {
-      // Additional checks based on user's role, entity, and actions
-      // ...
-
-      return true; // Access granted
-    }
-
-    return false; // Access denied
+    const isValidRole = user && permissions.role === user.role;
+    const isValidAction =
+      isValidRole &&
+      RolePermissions[user.role][permissions.entity].includes(
+        permissions.action,
+      );
+    return isValidAction;
   }
 }
