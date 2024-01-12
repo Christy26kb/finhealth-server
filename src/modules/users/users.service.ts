@@ -12,7 +12,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     const { name, email, id } = createUserDto;
     return await this.prismaService.users.create({
       data: {
@@ -23,7 +23,7 @@ export class UsersService {
     });
   }
 
-  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const { name } = updateUserDto;
     return await this.prismaService.users.update({
       where: {
@@ -35,11 +35,11 @@ export class UsersService {
     });
   }
 
-  async findAllUsers() {
+  async findAll() {
     return await this.prismaService.users.findMany();
   }
 
-  async findUser(id: string) {
+  async findOne(id: string) {
     return await this.prismaService.users.findUnique({
       where: {
         id,

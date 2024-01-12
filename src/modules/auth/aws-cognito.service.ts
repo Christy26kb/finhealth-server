@@ -10,14 +10,14 @@ import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import { AuthRegisterUserDto } from './dtos/auth-register-user.dto';
 import { AuthVerifyUserDto } from './dtos/auth-verify-user.dto';
 import { AuthConfigService } from '../../config/auth/auth-config.service';
-import { PrismaService } from '../../config/db/prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AwsCognitoService {
   constructor(
     private userPool: CognitoUserPool,
     private authConfigService: AuthConfigService,
-    private prismaService: PrismaService,
+    private usersService: UsersService,
   ) {
     this.userPool = new CognitoUserPool({
       UserPoolId: this.authConfigService.userPoolId,
@@ -44,12 +44,10 @@ export class AwsCognitoService {
             reject(err);
           } else {
             resolve(
-              await this.prismaService.users.create({
-                data: {
-                  id: result.userSub,
-                  email,
-                  name,
-                },
+              await this.usersService.create({
+                id: result.userSub,
+                email,
+                name,
               }),
             );
           }

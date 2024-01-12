@@ -25,7 +25,7 @@ export class UsersController {
   @Permissions(ROLES.ADMIN, ENTITIES.USERS, Actions[ENTITIES.USERS].canReadAll)
   @UseGuards(PermissionsGuard)
   async findAllUsers() {
-    return await this.usersService.findAllUsers();
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
@@ -33,7 +33,7 @@ export class UsersController {
   @UseGuards(PermissionsGuard)
   @UsePipes(ValidationPipe)
   async findUser(@Param('id') id: string) {
-    return await this.usersService.findUser(id);
+    return await this.usersService.findOne(id);
   }
 
   @Put(':id')
@@ -42,6 +42,6 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return await this.usersService.updateUser(id, updateUserDto);
+    return await this.usersService.update(id, updateUserDto);
   }
 }
