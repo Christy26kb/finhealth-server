@@ -37,6 +37,8 @@ export class UsersController {
   }
 
   @Put(':id')
+  @Permissions(ROLES.USER, ENTITIES.USERS, Actions[ENTITIES.USERS].canUpdate)
+  @UseGuards(PermissionsGuard)
   @UsePipes(ValidationPipe)
   async updateUser(
     @Param('id') id: string,

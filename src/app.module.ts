@@ -7,6 +7,7 @@ import { DatabaseConfigModule } from './config/db/db-config.module';
 import { AuthConfigModule } from './config/auth/auth-config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { ProfilesModule } from './modules/profiles/profiles.module';
 
 /**
  * App Module
@@ -23,6 +24,7 @@ import { UsersModule } from './modules/users/users.module';
     AuthConfigModule,
     AuthModule,
     UsersModule,
+    ProfilesModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],

@@ -11,6 +11,12 @@ import { DatabaseConfigModule } from '../../config/db/db-config.module';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './guards/auth.guard';
 import { UsersService } from '../users/users.service';
+
+/**
+ * Auth Module
+ *
+ * @module
+ */
 @Module({
   imports: [
     AuthConfigModule,

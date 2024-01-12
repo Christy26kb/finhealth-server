@@ -108,7 +108,13 @@ export const Actions = {
 export const RolePermissions = {
   [ROLES.USER]: {
     [ENTITIES.USERS]: [Actions.users.canRead, Actions.users.canUpdate],
-    [ENTITIES.PROFILES]: [],
+    [ENTITIES.PROFILES]: [
+      Actions.profiles.canCreate,
+      Actions.profiles.canReadAll,
+      Actions.profiles.canRead,
+      Actions.profiles.canUpdate,
+      Actions.profiles.canDelete,
+    ],
     [ENTITIES.CATEGORIES]: [],
     [ENTITIES.INCOMES]: [],
     [ENTITIES.EXPENSES]: [],
