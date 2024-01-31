@@ -13,6 +13,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { DebtsModule } from './modules/debts/debts.module';
 import { LendsModule } from './modules/lends/lends.module';
+import { SubscriptionsModule } from './modules/subscriptions/subcriptions.module';
 
 /**
  * App Module
@@ -36,6 +37,7 @@ import { LendsModule } from './modules/lends/lends.module';
     ExpensesModule,
     DebtsModule,
     LendsModule,
+    SubscriptionsModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],
