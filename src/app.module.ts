@@ -11,6 +11,8 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
 import { IncomesModule } from './modules/incomes/incomes.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
+import { DebtsModule } from './modules/debts/debts.module';
+import { LendsModule } from './modules/lends/lends.module';
 
 /**
  * App Module
@@ -32,6 +34,8 @@ import { ExpensesModule } from './modules/expenses/expenses.module';
     CategoriesModule,
     IncomesModule,
     ExpensesModule,
+    DebtsModule,
+    LendsModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],
