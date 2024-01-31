@@ -8,6 +8,7 @@ import { AuthConfigModule } from './config/auth/auth-config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
+import { IncomesModule } from './modules/incomes/incomes.module';
 
 /**
  * App Module
@@ -25,6 +26,7 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
     AuthModule,
     UsersModule,
     ProfilesModule,
+    IncomesModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],
