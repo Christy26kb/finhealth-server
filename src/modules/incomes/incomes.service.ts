@@ -29,7 +29,7 @@ export class IncomesService {
     return await this.prismaService.incomes.findUnique({
       where: {
         profile_id: profileId,
-        id: id,
+        id,
       },
     });
   }

@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { IncomesModule } from './modules/incomes/incomes.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 /**
  * App Module
@@ -27,6 +28,7 @@ import { IncomesModule } from './modules/incomes/incomes.module';
     UsersModule,
     ProfilesModule,
     IncomesModule,
+    CategoriesModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],
