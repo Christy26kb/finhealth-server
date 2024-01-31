@@ -10,12 +10,14 @@ import { UsersModule } from './modules/users/users.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { IncomesModule } from './modules/incomes/incomes.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
 
 /**
  * App Module
  *
  * @module
  */
+
 @Module({
   imports: [
     DevtoolsModule.register({
@@ -27,8 +29,9 @@ import { CategoriesModule } from './modules/categories/categories.module';
     AuthModule,
     UsersModule,
     ProfilesModule,
-    IncomesModule,
     CategoriesModule,
+    IncomesModule,
+    ExpensesModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],

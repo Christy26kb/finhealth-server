@@ -8,6 +8,7 @@ import { DatabaseConfigModule } from '../../config/db/db-config.module';
  *
  * @module
  */
+
 @Module({
   imports: [DatabaseConfigModule],
   controllers: [IncomesController],

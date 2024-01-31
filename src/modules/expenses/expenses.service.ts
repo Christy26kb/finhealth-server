@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { CreateIncomeDto } from './dtos/create-income.dto';
-import { UpdateIncomeDto } from './dtos/update-income.dto';
+import { CreateExpenseDto } from './dtos/create-expense.dto';
+import { UpdateExpenseDto } from './dtos/update-expense.dto';
 import { PrismaService } from '../../config/db/prisma/prisma.service';
 import { validateProfile } from 'src/common/utils/profile-utils';
 
 @Injectable()
-export class IncomesService {
+export class ExpensesService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createIncomeDto: CreateIncomeDto, profiles: string[]) {
-    validateProfile(profiles, createIncomeDto.profile_id);
-    return await this.prismaService.incomes.create({
-      data: createIncomeDto,
+  async create(createExpenseDto: CreateExpenseDto, profiles: string[]) {
+    validateProfile(profiles, createExpenseDto.profile_id);
+    return await this.prismaService.expenses.create({
+      data: createExpenseDto,
     });
   }
 
   async findAll(profileId: string, profiles: string[]) {
     validateProfile(profiles, profileId);
-    return await this.prismaService.incomes.findMany({
+    return await this.prismaService.expenses.findMany({
       where: {
         profile_id: profileId,
       },
@@ -26,7 +26,7 @@ export class IncomesService {
 
   async findOne(id: string, profileId: string, profiles: string[]) {
     validateProfile(profiles, profileId);
-    return await this.prismaService.incomes.findUnique({
+    return await this.prismaService.expenses.findUnique({
       where: {
         profile_id: profileId,
         id,
@@ -36,12 +36,13 @@ export class IncomesService {
 
   async update(
     id: string,
-    updateIncomeDto: UpdateIncomeDto,
+    updateExpenseDto: UpdateExpenseDto,
     profiles: string[],
   ) {
-    const { name, amount, category_id, profile_id, notes } = updateIncomeDto;
+    const { name, amount, category_id, profile_id, notes, paid_via } =
+      updateExpenseDto;
     validateProfile(profiles, profile_id);
-    return await this.prismaService.incomes.update({
+    return await this.prismaService.expenses.update({
       where: {
         profile_id,
         id,
@@ -50,6 +51,7 @@ export class IncomesService {
         name,
         amount,
         notes,
+        paid_via,
         category_id,
       },
     });
@@ -57,7 +59,7 @@ export class IncomesService {
 
   async remove(id: string, profileId: string, profiles: string[]) {
     validateProfile(profiles, profileId);
-    return this.prismaService.incomes.delete({
+    return this.prismaService.expenses.delete({
       where: {
         profile_id: profileId,
         id,

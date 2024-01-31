@@ -6,7 +6,7 @@ import {
   IsUUID,
 } from 'class-validator';
 
-export class UpdateIncomeDto {
+export class UpdateExpenseDto {
   @IsUUID()
   profile_id: string;
 
@@ -19,6 +19,9 @@ export class UpdateIncomeDto {
 
   @IsString()
   notes?: string;
+
+  @IsString()
+  paid_via?: string;
 
   @IsNumber()
   @IsOptional()

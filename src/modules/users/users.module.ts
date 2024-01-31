@@ -8,6 +8,7 @@ import { UsersController } from './users.controller';
  *
  * @module
  */
+
 @Module({
   imports: [DatabaseConfigModule],
   controllers: [UsersController],

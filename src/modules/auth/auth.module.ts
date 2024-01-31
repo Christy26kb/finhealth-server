@@ -17,6 +17,7 @@ import { UsersService } from '../users/users.service';
  *
  * @module
  */
+
 @Module({
   imports: [
     AuthConfigModule,

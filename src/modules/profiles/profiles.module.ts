@@ -8,6 +8,7 @@ import { ProfilesController } from './profiles.controller';
  *
  * @module
  */
+
 @Module({
   imports: [DatabaseConfigModule],
   controllers: [ProfilesController],
