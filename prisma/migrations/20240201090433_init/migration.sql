@@ -2,7 +2,7 @@
 CREATE TYPE "Roles" AS ENUM ('USER', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "Modules" AS ENUM ('INCOMES', 'EXPENSES', 'INVESTMENTS', 'SUBSCRIPTIONS', 'DEBTS', 'LENDS', 'REPORTS');
+CREATE TYPE "CategoryTypes" AS ENUM ('INCOMES', 'EXPENSES', 'INVESTMENTS', 'SUBSCRIPTIONS', 'DEBTS', 'LENDS', 'NOTIFIERS', 'REPORTS');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -47,8 +47,8 @@ CREATE TABLE "notifiers" (
     "name" TEXT NOT NULL,
     "notes" TEXT,
     "name_hash" TEXT,
-    "user_id" UUID NOT NULL,
     "profile_id" UUID NOT NULL,
+    "category_id" INTEGER,
     "notify_date" TIMESTAMP(3) NOT NULL,
     "enabled" BOOLEAN NOT NULL DEFAULT false,
     "completed" BOOLEAN NOT NULL DEFAULT false,
@@ -198,7 +198,7 @@ CREATE TABLE "categories" (
     "name" TEXT NOT NULL,
     "notes" TEXT,
     "name_hash" TEXT,
-    "module_type" "Modules" NOT NULL,
+    "type" "CategoryTypes" NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -212,10 +212,10 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "notifiers" ADD CONSTRAINT "notifiers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "notifiers" ADD CONSTRAINT "notifiers_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "profiles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "notifiers" ADD CONSTRAINT "notifiers_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "notifiers" ADD CONSTRAINT "notifiers_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "profiles" ADD CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
