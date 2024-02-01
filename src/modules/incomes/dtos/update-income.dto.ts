@@ -18,6 +18,7 @@ export class UpdateIncomeDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsNumber()

@@ -18,6 +18,7 @@ export class CreateDebtDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsNumber()

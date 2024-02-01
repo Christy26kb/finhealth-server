@@ -18,6 +18,7 @@ export class CreateIncomeDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsNumber()

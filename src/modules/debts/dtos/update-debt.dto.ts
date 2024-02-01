@@ -18,6 +18,7 @@ export class UpdateDebtDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsNumber()

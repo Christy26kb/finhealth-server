@@ -18,6 +18,7 @@ export class CreateLendDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsNumber()

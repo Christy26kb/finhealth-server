@@ -20,6 +20,7 @@ export class CreateSubscriptionDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsString()

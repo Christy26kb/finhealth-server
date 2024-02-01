@@ -18,6 +18,7 @@ export class UpdateLendDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsNumber()

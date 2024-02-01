@@ -1,4 +1,4 @@
-import { IsString, IsUUID, IsCurrency } from 'class-validator';
+import { IsString, IsUUID, IsCurrency, IsOptional } from 'class-validator';
 
 export class CreateExpenseDto {
   @IsUUID()
@@ -12,6 +12,7 @@ export class CreateExpenseDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsString()

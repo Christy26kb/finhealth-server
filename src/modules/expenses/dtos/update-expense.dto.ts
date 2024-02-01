@@ -18,6 +18,7 @@ export class UpdateExpenseDto {
   amount: string;
 
   @IsString()
+  @IsOptional()
   notes?: string;
 
   @IsString()
