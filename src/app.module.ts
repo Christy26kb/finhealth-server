@@ -15,6 +15,7 @@ import { DebtsModule } from './modules/debts/debts.module';
 import { LendsModule } from './modules/lends/lends.module';
 import { SubscriptionsModule } from './modules/subscriptions/subcriptions.module';
 import { InvestmentsModule } from './modules/investments/lends.module';
+import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
 
 /**
  * App Module
@@ -40,6 +41,7 @@ import { InvestmentsModule } from './modules/investments/lends.module';
     LendsModule,
     SubscriptionsModule,
     InvestmentsModule,
+    FeedbacksModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],

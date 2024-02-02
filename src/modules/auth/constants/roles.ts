@@ -166,7 +166,13 @@ export const RolePermissions = {
     ],
     [ENTITIES.NOTIFIERS]: [],
     [ENTITIES.REPORTS]: [],
-    [ENTITIES.FEEDBACKS]: [],
+    [ENTITIES.FEEDBACKS]: [
+      Actions.feedbacks.canCreate,
+      Actions.feedbacks.canReadAll,
+      Actions.feedbacks.canRead,
+      Actions.feedbacks.canUpdate,
+      Actions.feedbacks.canDelete,
+    ],
   },
   [ROLES.ADMIN]: {
     [ENTITIES.USERS]: [

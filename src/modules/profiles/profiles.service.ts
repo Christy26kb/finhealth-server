@@ -7,21 +7,21 @@ import { PrismaService } from '../../config/db/prisma/prisma.service';
 export class ProfilesService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createProfileDto: CreateProfileDto) {
+  async create(createProfileDto: CreateProfileDto, userId: string) {
     return await this.prismaService.profiles.create({
-      data: createProfileDto,
+      data: { ...createProfileDto, user_id: userId },
     });
   }
 
-  async findAll(id: string) {
+  async findAll(userId: string) {
     return await this.prismaService.profiles.findMany({
       where: {
-        user_id: id,
+        user_id: userId,
       },
     });
   }
 
-  async findOne(userId: string, id: string) {
+  async findOne(id: string, userId: string) {
     return await this.prismaService.profiles.findUnique({
       where: {
         user_id: userId,
@@ -30,8 +30,9 @@ export class ProfilesService {
     });
   }
 
-  async update(userId: string, id: string, updateProfileDto: UpdateProfileDto) {
-    const { name } = updateProfileDto;
+  async update(id: string, updateProfileDto: UpdateProfileDto, userId: string) {
+    const { name, notes, currency, locale, monthly_email_report } =
+      updateProfileDto;
     return await this.prismaService.profiles.update({
       where: {
         user_id: userId,
@@ -39,11 +40,15 @@ export class ProfilesService {
       },
       data: {
         name,
+        notes,
+        currency,
+        locale,
+        monthly_email_report,
       },
     });
   }
 
-  async remove(userId: string, id: string) {
+  async remove(id: string, userId: string) {
     return this.prismaService.profiles.delete({
       where: {
         user_id: userId,

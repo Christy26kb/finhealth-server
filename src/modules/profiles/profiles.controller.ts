@@ -43,8 +43,9 @@ export class ProfilesController {
     Actions[ENTITIES.PROFILES].canCreate,
   )
   @UseGuards(PermissionsGuard)
-  async createProfile(@Body() createProfileDto: CreateProfileDto) {
-    return await this.profilesService.create(createProfileDto);
+  @UsePipes(ValidationPipe)
+  async createProfile(@Body() createProfileDto: CreateProfileDto, @Req() req) {
+    return await this.profilesService.create(createProfileDto, req.user.id);
   }
 
   @Get(':id')
@@ -56,7 +57,7 @@ export class ProfilesController {
   @UseGuards(PermissionsGuard)
   @UsePipes(ValidationPipe)
   async findProfile(@Param('id') id: string, @Req() req) {
-    return await this.profilesService.findOne(req.user.id, id);
+    return await this.profilesService.findOne(id, req.user.id);
   }
 
   @Put(':id')
@@ -72,7 +73,7 @@ export class ProfilesController {
     @Req() req,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    return await this.profilesService.update(req.user.id, id, updateProfileDto);
+    return await this.profilesService.update(id, updateProfileDto, req.user.id);
   }
 
   @Delete(':id')
@@ -84,6 +85,6 @@ export class ProfilesController {
   @UseGuards(PermissionsGuard)
   @UsePipes(ValidationPipe)
   async deleteProfile(@Param('id') id: string, @Req() req) {
-    return await this.profilesService.remove(req.user.id, id);
+    return await this.profilesService.remove(id, req.user.id);
   }
 }
