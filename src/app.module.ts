@@ -14,6 +14,7 @@ import { ExpensesModule } from './modules/expenses/expenses.module';
 import { DebtsModule } from './modules/debts/debts.module';
 import { LendsModule } from './modules/lends/lends.module';
 import { SubscriptionsModule } from './modules/subscriptions/subcriptions.module';
+import { InvestmentsModule } from './modules/investments/lends.module';
 
 /**
  * App Module
@@ -38,6 +39,7 @@ import { SubscriptionsModule } from './modules/subscriptions/subcriptions.module
     DebtsModule,
     LendsModule,
     SubscriptionsModule,
+    InvestmentsModule,
   ],
   providers: [AppConfigService],
   exports: [AppConfigService],

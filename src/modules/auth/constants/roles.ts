@@ -150,7 +150,13 @@ export const RolePermissions = {
       Actions.lends.canUpdate,
       Actions.lends.canDelete,
     ],
-    [ENTITIES.INVESTMENTS]: [],
+    [ENTITIES.INVESTMENTS]: [
+      Actions.investments.canCreate,
+      Actions.investments.canReadAll,
+      Actions.investments.canRead,
+      Actions.investments.canUpdate,
+      Actions.investments.canDelete,
+    ],
     [ENTITIES.SUBSCRIPTIONS]: [
       Actions.subscriptions.canCreate,
       Actions.subscriptions.canReadAll,
