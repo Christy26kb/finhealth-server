@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Put,
+  Req,
   Param,
   UsePipes,
   UseGuards,
@@ -21,11 +22,11 @@ import { Actions, ENTITIES, ROLES } from '../auth/constants/roles';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get()
-  @Permissions(ROLES.ADMIN, ENTITIES.USERS, Actions[ENTITIES.USERS].canReadAll)
+  @Get('/me')
+  @Permissions(ROLES.USER, ENTITIES.USERS, Actions[ENTITIES.USERS].canRead)
   @UseGuards(PermissionsGuard)
-  async findAllUsers() {
-    return await this.usersService.findAll();
+  async findCurrentUser(@Req() req) {
+    return await this.usersService.findOne(req.user.id);
   }
 
   @Get(':id')
