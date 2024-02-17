@@ -22,6 +22,13 @@ import { Actions, ENTITIES, ROLES } from '../auth/constants/roles';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Get()
+  @Permissions(ROLES.ADMIN, ENTITIES.USERS, Actions[ENTITIES.USERS].canReadAll)
+  @UseGuards(PermissionsGuard)
+  async findAllUsers() {
+    return await this.usersService.findAll();
+  }
+
   @Get('/me')
   @Permissions(ROLES.USER, ENTITIES.USERS, Actions[ENTITIES.USERS].canRead)
   @UseGuards(PermissionsGuard)
