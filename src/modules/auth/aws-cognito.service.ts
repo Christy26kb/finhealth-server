@@ -4,11 +4,13 @@ import {
   CognitoUserAttribute,
   AuthenticationDetails,
   CognitoUser,
+  CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 
 import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import { AuthRegisterUserDto } from './dtos/auth-register-user.dto';
 import { AuthVerifyUserDto } from './dtos/auth-verify-user.dto';
+import { AuthUserRefreshTokenDto } from './dtos/auth-user-refresh-token.dto';
 import { AuthConfigService } from '../../config/auth/auth-config.service';
 import { UsersService } from '../users/users.service';
 
@@ -94,6 +96,29 @@ export class AwsCognitoService {
         onFailure: (err) => {
           reject(err);
         },
+      });
+    });
+  }
+
+  async refreshTokens(userRefreshTokenDto: AuthUserRefreshTokenDto) {
+    const cognitoUser = new CognitoUser({
+      Username: 'dummy', // This can be any dummy value
+      Pool: this.userPool,
+    });
+    const refreshTokenObj = new CognitoRefreshToken({
+      RefreshToken: userRefreshTokenDto.refreshToken,
+    });
+    return await new Promise((resolve, reject) => {
+      cognitoUser.refreshSession(refreshTokenObj, (err, session) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({
+            accessToken: session.accessToken.jwtToken,
+            idToken: session.idToken.jwtToken,
+            refreshToken: session.refreshToken.token,
+          });
+        }
       });
     });
   }

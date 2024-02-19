@@ -9,6 +9,7 @@ import { AwsCognitoService } from './aws-cognito.service';
 import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import { AuthRegisterUserDto } from './dtos/auth-register-user.dto';
 import { AuthVerifyUserDto } from './dtos/auth-verify-user.dto';
+import { AuthUserRefreshTokenDto } from './dtos/auth-user-refresh-token.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private awsCognitoService: AwsCognitoService) {}
@@ -29,5 +30,11 @@ export class AuthController {
   @UsePipes(ValidationPipe)
   async login(@Body() authLoginUserDto: AuthLoginUserDto) {
     return await this.awsCognitoService.authenticateUser(authLoginUserDto);
+  }
+
+  @Post('/refresh')
+  @UsePipes(ValidationPipe)
+  async refreshToken(@Body() userRefreshTokenDto: AuthUserRefreshTokenDto) {
+    return await this.awsCognitoService.refreshTokens(userRefreshTokenDto);
   }
 }
