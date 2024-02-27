@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { PrismaService } from '../../config/db/prisma/prisma.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { LoggerService } from 'src/common/logger/logger.service';
 /**
  * Service dealing with Users CRUD Operations.
  *
@@ -10,7 +11,11 @@ import { UpdateUserDto } from './dtos/update-user.dto';
  */
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
+  private logger: LoggerService;
+
+  constructor(private prismaService: PrismaService) {
+    this.logger = LoggerService.getInstance('Users Service');
+  }
 
   async create(createUserDto: CreateUserDto) {
     const { name, email, id } = createUserDto;
@@ -45,6 +50,7 @@ export class UsersService {
   }
 
   async findOne(id: string) {
+    this.logger.info(`BEGIN: Getting user with id: ${id}`);
     return await this.prismaService.users.findUnique({
       where: {
         id,
