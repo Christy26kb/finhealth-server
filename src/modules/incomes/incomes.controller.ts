@@ -11,6 +11,7 @@ import {
   UsePipes,
   UseGuards,
   ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { IncomesService } from './incomes.service';
@@ -34,8 +35,17 @@ export class IncomesController {
     Actions[ENTITIES.INCOMES].canReadAll,
   )
   @UseGuards(PermissionsGuard)
-  async findAllIncomes(@Query('profile_id') profileId: string, @Req() req) {
-    return await this.incomesService.findAll(profileId, extractProfileIds(req));
+  async findAllIncomes(
+    @Query('profile_id') profileId: string,
+    @Query('page_size', ParseIntPipe) pageSize: number,
+    @Query('page_number', ParseIntPipe) pageNumber: number,
+    @Req() req,
+  ) {
+    return await this.incomesService.findAll(
+      profileId,
+      extractProfileIds(req),
+      { pageSize, pageNumber },
+    );
   }
 
   @Post()

@@ -50,8 +50,17 @@ export class UsersService {
         id,
       },
       include: {
-        profiles: true,
-        feedbacks: true,
+        profiles: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        feedbacks: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }

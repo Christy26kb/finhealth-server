@@ -3,6 +3,11 @@ import { CreateIncomeDto } from './dtos/create-income.dto';
 import { UpdateIncomeDto } from './dtos/update-income.dto';
 import { PrismaService } from '../../config/db/prisma/prisma.service';
 import { validateProfile } from 'src/common/utils/profile-utils';
+import { PaginationParams } from 'src/types';
+import {
+  getPaginationQuery,
+  transformToPageResponse,
+} from 'src/helpers/pagination';
 
 @Injectable()
 export class IncomesService {
@@ -15,13 +20,19 @@ export class IncomesService {
     });
   }
 
-  async findAll(profileId: string, profiles: string[]) {
+  async findAll(
+    profileId: string,
+    profiles: string[],
+    paginationParams: PaginationParams,
+  ) {
     validateProfile(profiles, profileId);
-    return await this.prismaService.incomes.findMany({
-      where: {
-        profile_id: profileId,
-      },
-    });
+    const filters = { profile_id: profileId };
+    const pagination = getPaginationQuery(paginationParams);
+    const response = await this.prismaService.$transaction([
+      this.prismaService.incomes.count({ where: filters }),
+      this.prismaService.incomes.findMany({ where: filters, ...pagination }),
+    ]);
+    return transformToPageResponse(paginationParams, response);
   }
 
   async findOne(id: string, profileId: string, profiles: string[]) {
