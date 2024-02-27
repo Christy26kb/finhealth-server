@@ -6,18 +6,12 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PaginationParams } from 'src/types';
 
 export interface PaginationResponse<T> {
   count: number;
   data: T;
   next: boolean;
 }
-
-const defaultParams: PaginationParams = {
-  pageNumber: 1,
-  pageSize: 20,
-};
 
 @Injectable()
 export class PaginationInterceptor<T>
@@ -30,10 +24,8 @@ export class PaginationInterceptor<T>
     const request = context.switchToHttp().getRequest();
 
     // Assuming pagination parameters are present in the query string
-    const pageNumber: number =
-      parseInt(request.query.page_number, 10) || defaultParams.pageNumber;
-    const pageSize: number =
-      parseInt(request.query.page_size, 10) || defaultParams.pageSize;
+    const pageNumber: number = parseInt(request.query.page_number, 10);
+    const pageSize: number = parseInt(request.query.page_size, 10);
 
     // Set the parsed page number and page size values in the request object
     request.query.paginationParams = {

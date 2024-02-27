@@ -27,7 +27,10 @@ export class IncomesService {
     const pagination = getPaginationQuery(paginationParams);
     return await this.prismaService.$transaction([
       this.prismaService.incomes.count({ where: filters }),
-      this.prismaService.incomes.findMany({ where: filters, ...pagination }),
+      this.prismaService.incomes.findMany({
+        where: filters,
+        ...(pagination && { ...pagination }),
+      }),
     ]);
   }
 
