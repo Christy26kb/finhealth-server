@@ -28,6 +28,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.1.16",
+    "@nestjs/terminus": "^10.2.3",
     "@prisma/client": "^5.7.1",
     "@types/passport-jwt": "^3.0.13",
     "amazon-cognito-identity-js": "^6.3.7",

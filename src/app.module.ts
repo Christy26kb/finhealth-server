@@ -16,6 +16,7 @@ import { LendsModule } from './modules/lends/lends.module';
 import { SubscriptionsModule } from './modules/subscriptions/subcriptions.module';
 import { InvestmentsModule } from './modules/investments/lends.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
+import { HealthModule } from './common/health/health.module';
 
 /**
  * App Module
@@ -28,6 +29,7 @@ import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
     DevtoolsModule.register({
       http: process.env.NODE_ENV !== 'production',
     }),
+    HealthModule,
     AppConfigModule,
     DatabaseConfigModule,
     AuthConfigModule,
