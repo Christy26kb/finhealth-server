@@ -32,9 +32,17 @@ enum CategoryTypes {
   REPORTS
 }
 
+enum NotifierStatus {
+  DELIVERED
+  UNDELIVERED
+  VIEWED
+  ACTIVE
+  INACTIVE
+}
+
 //-------------------------------------------USERS-LEVEL-ENTITIES
 
-model users {
+model Users {
   id                         String          @id @db.Uuid
   email                      String          @unique
   /// @encrypted
@@ -55,22 +63,26 @@ model users {
   new_signup_email           Boolean         @default(false)
   premium_plan_expired_email Boolean         @default(false)
   premium_usage_limit_email  Boolean         @default(false)
-  feedbacks                  feedbacks[]
-  profiles                   profiles[]
+  feedbacks                  Feedbacks[]
+  profiles                   Profiles[]
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("users")
 }
 
-model feedbacks {
+model Feedbacks {
   id                         Int             @id @default(autoincrement())
   message                    String
   user_id                    String          @db.Uuid
-  user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user                       Users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("feedbacks")
 }
 
-model notifiers {
+model Notifiers {
   id                         Int             @id @default(autoincrement())
   /// @encrypted
   name                       String
@@ -78,21 +90,25 @@ model notifiers {
   notes                      String?
   name_hash                  String?
   profile_id                 String          @db.Uuid
-  profiles                   profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profiles                   Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   notify_date                DateTime
   enabled                    Boolean         @default(false)
   completed                  Boolean         @default(false)
   repeat                     Boolean?        @default(false)
+  status                     NotifierStatus  @default(ACTIVE)
+  event                      Json?
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("notifiers")
 }
 
-model profiles {
+model Profiles {
   id                         String          @id @default(uuid()) @db.Uuid
   user_id                    String          @db.Uuid
-  user                       users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user                       Users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -101,25 +117,28 @@ model profiles {
   currency                   String          @default("INR")
   locale                     String          @default("en")
   monthly_email_report       Boolean         @default(false)
-  incomes                    incomes[]
-  expenses                   expenses[]
-  debts                      debts[]
-  lends                      lends[]
-  investements               investments[]
-  subscriptions              subscriptions[]
-  categories                 categories[]
-  reports                    reports[]
-  notifers                   notifiers[]
+  active                     Boolean         @default(false)
+  incomes                    Incomes[]
+  expenses                   Expenses[]
+  debts                      Debts[]
+  lends                      Lends[]
+  investements               Investments[]
+  subscriptions              Subscriptions[]
+  categories                 Categories[]
+  reports                    Reports[]
+  notifers                   Notifiers[]
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("profiles")
 }
 
 //-------------------------------------------PROFILES-LEVEL-ENTITIES
 
-model incomes {
+model Incomes {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profiles                   profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profiles                   Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -128,15 +147,18 @@ model incomes {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  date                       DateTime        @default(now())
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("incomes")
 }
 
-model expenses {
+model Expenses {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -146,15 +168,18 @@ model expenses {
   name_hash                  String?
   paid_via                   String          @default("")
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  date                       DateTime        @default(now())
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("expenses")
 }
 
-model debts {
+model Debts {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -163,15 +188,18 @@ model debts {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  date                       DateTime        @default(now())
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("debts")
 }
 
-model lends {
+model Lends {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -180,15 +208,18 @@ model lends {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  date                       DateTime        @default(now())
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("lends")
 }
 
-model investments {
+model Investments {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -199,15 +230,18 @@ model investments {
   units                      String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  date                       DateTime        @default(now())
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("investments")
 }
 
-model subscriptions {
+model Subscriptions {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -223,15 +257,18 @@ model subscriptions {
   active                     Boolean?        @default(true)
   cancelled_at               String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  date                       DateTime        @default(now())
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("subscriptions")
 }
 
-model reports {
+model Reports {
   id                         String          @id @default(uuid())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
@@ -240,35 +277,39 @@ model reports {
   amount                     String          @default("0")
   name_hash                  String?
   category_id                Int?
-  category                   categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  category                   Categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull)
   start_date                 DateTime
   end_date                   DateTime
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("reports")
 }
 
 //-------------------------------------------GENERIC-GROUPING-ENTITY-PROFILES-LEVEL
 
-model categories {
+model Categories {
   id                         Int             @id @default(autoincrement())
   profile_id                 String          @db.Uuid
-  profile                    profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile                    Profiles        @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   /// @encrypted
   name                       String
   /// @encrypted
   notes                      String?
   name_hash                  String?
   type                       CategoryTypes
-  incomes                    incomes[]
-  expenses                   expenses[]
-  subscriptions              subscriptions[]
-  investments                investments[]
-  lends                      lends[]
-  debts                      debts[]
-  reports                    reports[]
-  notifiers                  notifiers[]
+  incomes                    Incomes[]
+  expenses                   Expenses[]
+  subscriptions              Subscriptions[]
+  investments                Investments[]
+  lends                      Lends[]
+  debts                      Debts[]
+  reports                    Reports[]
+  notifiers                  Notifiers[]
   created_at                 DateTime        @default(now()) @db.Timestamptz(6)
   updated_at                 DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("categories")
 }
 
 //TODO--------------------------------------[BANK-ACCOUNTS--TRANSACTIONS]-USERS-LEVEL
